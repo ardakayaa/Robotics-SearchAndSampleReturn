@@ -23,7 +23,7 @@ def NavState(Rover):
                 # Set steering to average angle clipped to the range +/- 15
                 maxdist = np.max(Rover.nav_angles * 180/np.pi) - np.min(Rover.nav_angles * 180/np.pi)
                 print (maxdist)
-                Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi) + (np.max(Rover.nav_angles * 180/np.pi) * (0.1 * maxdist * 180/np.pi)), -15, 15)
+                Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi) + (np.max(Rover.nav_angles * 180/np.pi) * 0.4 ), -15, 15)
             # If there's a lack of navigable terrain pixels then go to 'stop' mode
             elif len(Rover.nav_angles) < Rover.stop_forward:
                     # Set mode to "stop" and hit the brakes!
@@ -76,15 +76,7 @@ def NavState(Rover):
     return Rover
 
 
-class UnlockedState(State):
-    """
-    The state which indicates that there are no limitations on device
-    capabilities.
-    """
+def Collect_Gold_Sate(Rover):
 
-    def on_event(self, event):
-        if event == 'device_locked':
-            return LockedState()
-
-        return self
-# End of our states.
+    Rover.throttle = 0
+    Rover.brake = Rover.brake_set

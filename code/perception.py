@@ -161,8 +161,10 @@ def perception_step(Rover):
 
         Rover.worldmap[rock_ycen, rock_xcen, 1] = 255
         Rover.vision_image[:,:,1] = rock_map * 255
+        Rover.near_sample = 1
     else:
         Rover.vision_image[:,:,1] = 0
+        Rover.near_sample = 0
 
 
 
