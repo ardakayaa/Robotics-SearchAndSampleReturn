@@ -43,7 +43,6 @@ def rover_coords(binary_img):
     y_pixel = -(xpos - binary_img.shape[1]/2 ).astype(np.float)
     return x_pixel, y_pixel
 
-
 # Define a function to convert to radial coords in rover space
 def to_polar_coords(x_pixel, y_pixel):
     # Convert (x_pixel, y_pixel) to (distance, angle)
@@ -71,7 +70,6 @@ def translate_pix(xpix_rot, ypix_rot, xpos, ypos, scale):
     # Return the result
     return xpix_translated, ypix_translated
 
-
 # Define a function to apply rotation and translation (and clipping)
 # Once you define the two functions above this function should work
 def pix_to_world(xpix, ypix, xpos, ypos, yaw, world_size, scale):
@@ -94,12 +92,9 @@ def perspect_transform(img, src, dst):
 
     return warped, mask
 
-
 # Apply the above functions in succession and update the Rover state accordingly
 def perception_step(Rover):
     # Perform perception steps to update Rover()
-    # TODO:
-    # NOTE: camera image is coming to you in Rover.img
     # 1) Define source and destination points for perspective transform
     dst_size = 5
     bottom_offset = 6
@@ -135,18 +130,14 @@ def perception_step(Rover):
 
     obsxpix, obsypix = rover_coords(obs_map)
     obs_x_world, obs_y_world = pix_to_world(obsxpix, obsypix, xpos, ypos, yaw, world_size, scale)
+
     # 7) Update Rover worldmap (to be displayed on right side of screen)
-        # Example: Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1
-        #          Rover.worldmap[rock_y_world, rock_x_world, 1] += 1
-        #          Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
     Rover.worldmap[y_world, x_world, 2] += 10
     Rover.worldmap[obs_y_world, obs_x_world, 0] += 1
 
     # 8) Convert rover-centric pixel positions to polar coordinates
     dist, angles = to_polar_coords(xpix, ypix)
     # Update Rover pixel distances and angles
-        # Rover.nav_dists = rover_centric_pixel_distances
-        # Rover.nav_angles = rover_centric_angles
     Rover.nav_angles = angles
     #See if we can find rock samples
     rock_map = find_rocks(Rock_warped, levels =(110,110,50))
@@ -162,6 +153,9 @@ def perception_step(Rover):
         Rover.worldmap[rock_ycen, rock_xcen, 1] = 255
         Rover.vision_image[:,:,1] = rock_map * 255
         Rover.near_sample = 1
+    #Uptdates Rover angles towards Gold,if there is
+        Rover.samples_pos = [rock_ang,rock_dist]
+
     else:
         Rover.vision_image[:,:,1] = 0
         Rover.near_sample = 0
