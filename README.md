@@ -6,7 +6,7 @@ the [NASA Sample and Return Challenge](https://www.nasa.gov/directorates/spacete
 - For more information about this project, check
 [the starter code as provided by Udacity](https://github.com/udacity/RoboND-Rover-Project)
 
-# [WRITEUP](https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/WRITEUP.md)
+# [WRITEUP](https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/WRITEUP.md)
 
 ## The Simulator
 The first step is to download the simulator build that's appropriate for your operating system.  Here are the links for [Linux](https://s3-us-west-1.amazonaws.com/udacity-robotics/Rover+Unity+Sims/Linux_Roversim.zip), [Mac](	https://s3-us-west-1.amazonaws.com/udacity-robotics/Rover+Unity+Sims/Mac_Roversim.zip), or [Windows](https://s3-us-west-1.amazonaws.com/udacity-robotics/Rover+Unity+Sims/Windows_Roversim.zip).  
