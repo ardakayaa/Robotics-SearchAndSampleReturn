@@ -1,8 +1,37 @@
 ## Project: Search and Sample Return
-### Writeup Template: You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
 
----
+### Outline
+- Summary
+- Videos
+- Data Analysis
+- - Obstacle, Navigable Terrain, and Rock Sample Identification
+- - World Map Creation
+-Autonomous Navigation and Mapping
+- - Perception
+- - Decision-making
+-Known Issues and Recomondations for Improvement
 
+# Summary
+- I have used Computer Vision techniques to process the image coming from thr Rover.
+- - Idetify Rock Samples
+- - Mapping environment in real-time for autonomous driving.
+- I have wrote python codes to make a decision pipeline which proposes what actions to take in order to navigate the environment autonomously and pick up desired samples.
+
+> I chose an 800 x 600 resolution with the graphic quality of 'good' for autonomous navigation
+
+![settings](output/settings.png)
+
+# Videos
+- [Notebook Analysis Output Video](https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/output/test_mapping.mp4)
+- [Screen Recording](https://youtu.be/4edeJGg8uFY)
+
+#Data Analysis
+- [The notebook]
+(https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/code/Rover_Project_Test_Notebook.ipynb)
+- [Output video of this notebook]
+(https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/output/test_mapping.mp4)
+
+------------------------------------------------------
 
 **The goals / steps of this project are the following:**  
 
