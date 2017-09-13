@@ -9,7 +9,7 @@ the [NASA Sample and Return Challenge](https://www.nasa.gov/directorates/spacete
 # [WRITEUP](https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/WRITEUP.md)
 
 # Videos
-- [Notebook Analysis Output Video](https://github.com/mithi/rover/blob/master/output/test_mapping.mp4)
+- [Notebook Analysis Output Video](https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/output/test_mapping.mp4)
 - [Screen Recording](https://youtu.be/4edeJGg8uFY)
 
 # Dependencies
