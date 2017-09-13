@@ -6,10 +6,10 @@
 - Data Analysis
 - - Obstacle, Navigable Terrain, and Rock Sample Identification
 - - World Map Creation
--Autonomous Navigation and Mapping
+- Autonomous Navigation and Mapping
 - - Perception
 - - Decision-making
--Known Issues and Recomondations for Improvement
+- Known Issues and Recomondations for Improvement
 
 # Summary
 - I have used Computer Vision techniques to process the image coming from thr Rover.
@@ -71,7 +71,7 @@ rock_map = find_rocks(rock_img)
 ## World Map Creation
 
 - Algorithmically, I did the following steps for world map creation:
-- Initally: I started a a map which is a blank image.
+- Initally: I started a map which is a blank image.
 - Repeatedly: Each time there is an incoming image:
 - - 1. Use the color thresholding function to identify the Rock sample `find_rocks()` and navigable terrain `color_thresh()`
 - - 2. Transform the perspective (using`perspect_transform()`)
@@ -127,7 +127,7 @@ Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi) + (np.min(Rover.nav_
 
 # Known Issues and Recommendations For Improvement
 - Rover can get stuck after collecting Gold, I will solve this problem later on by adding better __am_I_stuck__ function. Because when Rover stucks, current version understands it, just by preocessing img. Checking Rover's last position, with new position would give better result to solve this problem of stucking.
-- After collecting the first sample, Rover's responses slower. I couldn't find the reason.
+- After collecting the first sample, Rover's responses get slower. I couldn't find the reason.
 - Rover while in `Nav_State` it gets into kind a sinus wave motion. And, it becomes worse after collecting the first sample.
 - Rover stops too hard when it comes close to the sample.
 - Rover sometimes passes the sample.

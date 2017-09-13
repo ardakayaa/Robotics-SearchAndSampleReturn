@@ -62,6 +62,6 @@ $ source activate RoboND
 $ python driver_rover.py
 ```
 - Launch the simulator
-- I chose an 840 x 520 resolution with the graphic quality of 'good'
+- I chose an 800 x 600 resolution with the graphic quality of 'good'
 - Choose _'Autonomous Mode'_
 - The rover should drive itself
