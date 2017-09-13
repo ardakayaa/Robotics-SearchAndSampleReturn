@@ -84,5 +84,30 @@ rock_map = find_rocks(rock_img)
 - [perception.py]
 (https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/code/perception.py)
 
+- Given a camera image from the rover my `perception_step()` function is roughly like this:
+
+### 1.Identify pixel locations of navigable terrain, obtacles and samples
+- To get pixel locations from Rover's cam, I used thresholding.
+
+![Navigable Terrain Threshold](output/img_thresh.PNG)
+
+![Sample Threshold](output/Sample_threshold.PNG)
+
+### 2.Process pixel locations of terrain, samples and obstacles 
+- This includes following:
+- - The `warped` and `obs_map` locations by transforming the perspective from _camera view_ to _sky view_
+- - The  `rover pixels` location by converting the `warped` to the Rover coordinate space
+- - The `polar pixels` which is the `rover pixels` in coordinate space.
+- - These `polar pixels` are used to compute the `mean angle` that can be used as the angle of steering of the rover   
+- - The `world pixels` transformed from the `rover pixels` in rover coordinate space to world map coordinate space
+
+### 3.Update Rover Properties, World Map, and Rover Vision Image
+- The `world pixels` locations are displayed as the robot's vision image, giving `warped`(terrain) and `rock_map`(sample) pixels their own respective unique identifying color.
+- If there are any pixels in `rock_map` this means there is a perceived sample we should go to. Starts to record distance and angle information of sample in`Rover.samples_pos`.
+
+
+
+
 ## Decision-making
 - [my_states.py]
+(https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/code/my_states.py)
