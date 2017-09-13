@@ -74,19 +74,7 @@ def NavState(Rover):
 
 
 def Collect_Gold_State(Rover):
-############################################################################
-    # Record the last position and direction before changing Rovers
-    # direction to get Gold
-###########################################################################
-    CollectState = 1
-    def RecordLastPose():
-        LastPose = Rover.pos
-        print (LastPose)
-
-    if CollectState == 1 :
-        RecordLastPose()
-        CollectState = 0
-
+    
     # Check for Rover.mode status
     if Rover.mode == 'forward':
         # Check the extent of navigable terrain

@@ -103,11 +103,39 @@ rock_map = find_rocks(rock_img)
 
 ### 3.Update Rover Properties, World Map, and Rover Vision Image
 - The `world pixels` locations are displayed as the robot's vision image, giving `warped`(terrain) and `rock_map`(sample) pixels their own respective unique identifying color.
-- If there are any pixels in `rock_map` this means there is a perceived sample we should go to. Starts to record distance and angle information of sample in`Rover.samples_pos`.
-
-
-
+- If there are any pixels in `rock_map` this means there is a perceived sample we should go to. Starts to record distance and angle information of the sample in`Rover.samples_pos`.
+- - Update `Rover.samples_pos` and `Rover.near_sample` to `True`.
 
 ## Decision-making
 - [my_states.py]
 (https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/code/my_states.py)
+
+### There are 2 states in decision-making process:
+- `NavState()`
+- - In `Nav_State` Rover follows walls. By doing that it can map the whole map and collect samples. I have added mean() and min() to modify angle towards wall instead of center.
+```python
+Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi) + (np.min(Rover.nav_angles * 180/np.pi)*0.4), -15, 15)
+```
+- - Check if we're stuck, make `mode = stop`
+- - Turn around till you find clean path to keep looking for samples
+- - If we find any sample, we should update direction so change state to`Collect_Gold_State()`
+
+- `Collect_Gold_State()`
+- - Update direction to `Rover.sample_pos[0]` (it's sample angle)
+- - Stop before passing sample by checking `Rover.sample_pos[1]` (it's sample distance) 
+- - Collect sample, then turn back to `Nav_state`
+
+# Known Issues and Recommendations For Improvement
+- Rover can get stuck after collecting Gold, I will solve this problem later on by adding better __am_I_stuck__ function. Because when Rover stucks, current version understands it, just by preocessing img. Checking Rover's last position, with new position would give better result to solve this problem of stucking.
+- After collecting the first sample, Rover's responses slower. I couldn't find the reason.
+- Rover while in `Nav_State` it gets into kind a sinus wave motion. And, it becomes worse after collecting the first sample.
+- Rover stops too hard when it comes close to the sample.
+- Rover sometimes passes the sample.
+- Rover can get into infinite turn in wide areas. I guess adding wide road state and stop adding `+ (np.min(Rover.nav_angles * 180/np.pi)*0.4` would solve this problem.
+```python
+Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi) + (np.min(Rover.nav_angles * 180/np.pi)*0.4), -15, 15)
+```
+
+
+
+
