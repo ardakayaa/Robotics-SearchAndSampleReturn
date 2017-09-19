@@ -5,13 +5,13 @@ import cv2
 # Threshold of RGB > 160 does a nice job of identifying ground pixels only
 def color_thresh(img, rgb_thresh=(160, 160, 160)):
     # Create an array of zeros same xy size as img, but single channel
-    color_select = np.zeros_like(img[:,:,0])
+    color_select = np.zeros_like(img[:,:])
     # Require that each pixel be above all three threshold values in RGB
     # above_thresh will now contain a boolean array with "True"
     # where threshold was met
-    above_thresh = (img[:,:,0] > rgb_thresh[0]) \
+    above_thresh = ((img[:,:,0] > rgb_thresh[0]) \
                 & (img[:,:,1] > rgb_thresh[1]) \
-                & (img[:,:,2] > rgb_thresh[2])
+                & (img[:,:,2] > rgb_thresh[2]))
     # Index the array of zeros with the boolean array and set to 1
     color_select[above_thresh] = 1
 
@@ -21,12 +21,27 @@ def color_thresh(img, rgb_thresh=(160, 160, 160)):
     # Return the binary image
     return color_select
 
+def hls_color_thresh(img,min_value, max_value):
+
+    hls_img = img.copy()
+    hls_img = cv2.cvtColor(hls_img, cv2.COLOR_BGR2HLS)
+    color_select = np.zeros_like(img[:,:])
+
+    within_thresh = (hls_img[:,:,0] >= min_value[0]) & (hls_img[:,:,0] <= max_value[0]) & \
+                  (hls_img[:,:,1] >= min_value[1]) & (hls_img[:,:,1] <= max_value[1]) & \
+                  (hls_img[:,:,2] >= min_value[2]) & (hls_img[:,:,2] <= max_value[2])
+      # Index the array of zeros with the boolean array and set to 1
+    color_select[within_thresh] = 1
+
+
+    return color_select
+
 #Find rock samples
 def find_rocks(img, levels=(110, 110, 50)):
 
-    rock_pix = (img[:,:,0] > levels[0]) \
+    rock_pix = ((img[:,:,0] > levels[0]) \
                 & (img[:,:,1] > levels[1]) \
-                & (img[:,:,2] < levels[2])
+                & (img[:,:,2] < levels[2]))
 
     rock_map = np.zeros_like(img[:,:,0])
     rock_map[rock_pix] = 1
@@ -87,10 +102,11 @@ def pix_to_world(xpix, ypix, xpos, ypos, yaw, world_size, scale):
 def perspect_transform(img, src, dst):
 
     M = cv2.getPerspectiveTransform(src, dst)
-    warped = cv2.warpPerspective(img, M, (img.shape[1], img.shape[0]))# keep same size as input image
-    mask =  cv2.warpPerspective(np.ones_like(img[:,:]), M,(img.shape[1],img.shape[0]))
+    warped = cv2.warpPerspective( img , M , (img.shape[1],img.shape[0]) )# keep same size as input image
+    mask =  cv2.warpPerspective( np.ones_like(img[:,:]) , M , (img.shape[1],img.shape[0]) )
 
     return warped, mask
+
 
 # Apply the above functions in succession and update the Rover state accordingly
 def perception_step(Rover):
@@ -98,27 +114,30 @@ def perception_step(Rover):
     # 1) Define source and destination points for perspective transform
     dst_size = 5
     bottom_offset = 6
-    image = Rover.vision_image
+    image = Rover.img
     source = np.float32([[14, 140], [301 ,140],[200, 96], [118, 96]])
     destination = np.float32([[image.shape[1]/2 - dst_size, image.shape[0] - bottom_offset],
                   [image.shape[1]/2 + dst_size, image.shape[0] - bottom_offset],
                   [image.shape[1]/2 + dst_size, image.shape[0] - 2*dst_size - bottom_offset],
                   [image.shape[1]/2 - dst_size, image.shape[0] - 2*dst_size - bottom_offset],
                   ])
-    # 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
-    threshed = color_thresh(Rover.img)
-    # 2) Apply perspective transform
-    warped, mask = perspect_transform(threshed, source, destination)
 
-    obs_map = np.absolute(np.float32(warped-1) * mask)
+    # 2) Apply perspective transform
+    warped, mask = perspect_transform(image, source, destination)
+
+    # 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
+    threshed = hls_color_thresh(warped, min_value= (0, 100, 70), max_value = (255, 255, 255))
+
+
+    obs_map = np.absolute(np.float32(threshed) - 1) * mask
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
         # Example: Rover.vision_image[:,:,0] = obstacle color-thresholded binary image
         #          Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image
         #          Rover.vision_image[:,:,2] = navigable terrain color-thresholded binary image
-    Rover.vision_image[:,:,0] = obs_map * 255
-    Rover.vision_image[:,:,2] = warped * 255
+    Rover.vision_image[:,:,2] = threshed[:,:,0] * 255
+    Rover.vision_image[:,:,0] = obs_map[:,:,0] * 255
     # 5) Convert map image pixel values to rover-centric coords
-    xpix, ypix = rover_coords(warped)
+    xpix, ypix = rover_coords(threshed[:,:,0])
     # 6) Convert rover-centric pixel values to world coordinates
     world_size = Rover.worldmap.shape[0]
     scale = 2 * dst_size
@@ -127,7 +146,7 @@ def perception_step(Rover):
     yaw = Rover.yaw
     x_world, y_world = pix_to_world(xpix, ypix, xpos, ypos, yaw, world_size, scale)
 
-    obsxpix, obsypix = rover_coords(obs_map)
+    obsxpix, obsypix = rover_coords(obs_map[:,:,0])
     obs_x_world, obs_y_world = pix_to_world(obsxpix, obsypix, xpos, ypos, yaw, world_size, scale)
 
     # 7) Update Rover worldmap (to be displayed on right side of screen)
@@ -156,7 +175,8 @@ def perception_step(Rover):
         Rover.vision_image[:,:,1] = rock_map * 255
         Rover.near_sample = 1
         #Uptdates Rover angles towards Gold,if there is
-        Rover.samples_pos = [rock_ang,rock_dist]
+
+        #Rover.samples_pos = [rock_ang,rock_dist]
 
     else:
         Rover.vision_image[:,:,1] = 0

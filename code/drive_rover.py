@@ -53,7 +53,7 @@ class RoverState():
         self.nav_dists = None # Distances of navigable terrain pixels
         self.ground_truth = ground_truth_3d # Ground truth worldmap
         self.mode = 'forward' # Current mode (can be forward or stop)
-        self.throttle_set = 0.2 # Throttle setting when accelerating
+        self.throttle_set = 0.12 # Throttle setting when accelerating
         self.brake_set = 10 # Brake setting when braking
         # The stop_forward and go_forward fields below represent total count
         # of navigable terrain pixels.  This is a very crude form of knowing
@@ -78,6 +78,10 @@ class RoverState():
         self.picking_up = 0 # Will be set to telemetry value data["picking_up"]
         self.send_pickup = False # Set to True to trigger rock pickup
         self.sample_found = False #  Will be set true when the rover picked up Gold
+        self.last_pos = [0,0] # Will be used for Stuck Check function
+        self.timer = 0 # Will be used for timing Stuck Check function
+        self.small_stucked = False # If Rover stucks while having clear path
+        self.turning_yaw = None # Keeps the yaw before turning for stuck
 # Initialize our rover
 Rover = RoverState()
 

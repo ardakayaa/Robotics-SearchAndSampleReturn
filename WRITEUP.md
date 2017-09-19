@@ -1,6 +1,7 @@
 ## Project: Search and Sample Return
 
 ### Outline
+- Updates for Re-Submission
 - Summary
 - Videos
 - Data Analysis
@@ -10,6 +11,15 @@
 - - Perception
 - - Decision-making
 - Known Issues and Recomondations for Improvement
+
+# Updates for Re-Submission
+- I have updated perception of the Rover
+- - For thresholding instead of RGB, I used HLS. Accuracy got better. 
+- I have closed Gold collecting part, to be able to focus more on navigation.
+
+- I have added StuckState. You can find it in (_supporting_functions.py_)
+
+
 
 # Summary
 - I have used Computer Vision techniques to process the image coming from thr Rover.
@@ -23,7 +33,7 @@
 
 # Videos
 - [Notebook Analysis Output Video](https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/output/test_mapping.mp4)
-- [Screen Recording](https://youtu.be/4edeJGg8uFY)
+- [Screen Recording](https://youtu.be/8B7VgJwuwVo)
 
 # Data Analysis
 - [The notebook]
