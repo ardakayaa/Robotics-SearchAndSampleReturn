@@ -10,7 +10,7 @@ the [NASA Sample and Return Challenge](https://www.nasa.gov/directorates/spacete
 
 # Videos
 - [Notebook Analysis Output Video](https://github.com/ardakayaa/Robotics-SearchAndSampleReturn/blob/master/output/test_mapping.mp4)
-- [Screen Recording](https://youtu.be/4edeJGg8uFY)
+- [Screen Recording](https://youtu.be/8B7VgJwuwVo)
 
 # Dependencies
 
